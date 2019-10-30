@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
+import {Router} from '@angular/router';
+import {Storage} from "@ionic/storage";
 @Component({
   selector: 'app-intro',
   templateUrl: './intro.page.html',
@@ -35,7 +36,11 @@ export class IntroPage implements OnInit {
       description:"Crea un playist basada en tu actividad fisica Ten reportes y acceso a lo que necesites integrado con GPS!",
       icon:"bicycle"
     }]
-  constructor() { }
+  constructor(private router:Router, private storge:Storage) { }
+  finish(){
+    this.storge.set('isIntroShowed',true)
+    this.router.navigateByUrl("/home");
+  }
   
   ngOnInit() {
   }
