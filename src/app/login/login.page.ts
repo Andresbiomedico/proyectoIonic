@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { AuthenticateService } from '../service/authenticate.service';
+import { NavController } from '@ionic/angular';
+import{Storage} from '@ionic/storage';
 
 @Component({
   selector: 'app-login',
@@ -15,10 +18,14 @@ export class LoginPage implements OnInit {
     ],
     password:[
       {type:"required",message:"El password es requerido"},
-      {type:"minLength",message:"Deben ser mas de 3 caracteres"}   
+      {type:"minlength",message:"Deben ser mas de 5 caracteres"}   
     ]
   }
-  constructor(private formBuilder:FormBuilder) {
+  errorMessage:string;
+  constructor(private formBuilder:FormBuilder,
+    private authService:AuthenticateService,
+    private  navCtrl:NavController,
+    private storge:Storage) {
     this.loginForm= this.formBuilder.group({
       email:new FormControl("",Validators.compose([
         Validators.required,
@@ -26,12 +33,21 @@ export class LoginPage implements OnInit {
       ])),
       password:new FormControl("",Validators.compose([
         Validators.required,
-        Validators.minLength(3)
+        Validators.minLength(5)
       ]))
     })
    }
 
-  ngOnInit() {
+  ngOnInit() {}
+  loginUser(credenciales){
+    this.authService.loginUser(credenciales).then(res=>{
+      this.errorMessage="";
+      this.storge.set('isUserLoggedIn',true)
+      this.navCtrl.navigateForward("/home")
+    }).catch(err=>{
+      this.errorMessage=err;
+    })
+    
   }
 
 }
