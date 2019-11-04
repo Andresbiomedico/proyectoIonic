@@ -1,17 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup,FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AuthenticateService } from '../service/authenticate.service';
 import { NavController } from '@ionic/angular';
 import{Storage} from '@ionic/storage';
 
+
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+  selector: 'app-register',
+  templateUrl: './register.page.html',
+  styleUrls: ['./register.page.scss'],
 })
-export class LoginPage implements OnInit {
-  loginForm:FormGroup;
+export class RegisterPage  {
+  registerForm:FormGroup;
   validation_messages={
+    nombre:[
+      {type:"required",message:"El nombre es requerido"},
+      {type:"minlength",message:"Deben ser mas de 3 caracteres"}],
+    apellido:[
+      {type:"required",message:"El apellido es requerido"},
+      {type:"minlength",message:"Deben ser mas de 3 caracteres"}],
     email:[
       {type:"required",message:"El email es requerido"},
       {type:"pattern",message:"ojo no es un email valido"}   
@@ -26,7 +33,15 @@ export class LoginPage implements OnInit {
     private authService:AuthenticateService,
     private  navCtrl:NavController,
     private storge:Storage) {
-    this.loginForm= this.formBuilder.group({
+    this.registerForm= this.formBuilder.group({
+      nombre:new FormControl("",Validators.compose([
+        Validators.required,
+        Validators.minLength(3)
+      ])),
+      apellido:new FormControl("",Validators.compose([
+        Validators.required,
+        Validators.minLength(3)
+      ])),
       email:new FormControl("",Validators.compose([
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$")
@@ -38,20 +53,14 @@ export class LoginPage implements OnInit {
     })
    }
 
-  ngOnInit() {}
-  loginUser(credenciales){
-    this.authService.loginUser(credenciales).then(res=>{
-      this.errorMessage="";
-      this.storge.set('isUserLoggedIn',true)
-      this.navCtrl.navigateForward("/menu/home")
-    }).catch(err=>{
-      this.errorMessage=err;
-      console.log(this.errorMessage)
-    })
-    
-  }
-  goToRegister(){
-    this.navCtrl.navigateForward("/register")
-  }
+   register(userData){
+     
+     this.authService.register(userData).then(()=>{
+      this.navCtrl.navigateBack("/login")
+     })    
+   }
+   goToLogin(){
+     this.navCtrl.navigateBack("/login")
+   }
 
 }
