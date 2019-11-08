@@ -1,7 +1,7 @@
 
 
 <ion-content>
-  <figure text-center padding>
+  <figure class="ion-padding ion-text-center">
     <img src="assets/img/logo.png">
   </figure>
   <form [formGroup]="loginForm" (ngSubmit)="loginUser(loginForm.value)">
@@ -49,5 +49,5 @@
   </form>
 </ion-content>
 <ion-footer>
-  <ion-button expand="full" shape="round" fill="outline"  color="success">Clic para Registrar</ion-button>
+  <ion-button (click)="goToRegister()"expand="full" shape="round" fill="outline"  color="success">Clic para Registrar</ion-button>
 </ion-footer>
